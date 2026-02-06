@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lego Disruptive Block Chain by Daby</title>
+    <!-- Mermaid JS for Diagrams -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --bg-dark: #0f1115;
+            --bg-card: #181b21;
+            --accent: #00ff9d; /* Neon Green */
+            --accent-dim: rgba(0, 255, 157, 0.1);
+            --text-main: #ffffff;
+            --text-muted: #a0a0a0;
+            --border: #2d333b;
+            --brazil-yellow: #ffcc00;
+            --brazil-green: #009c3b;
+            --error: #ff4d4d;
+            --vs-color: #ff0055;
+            --power-color: #00ccff;
+            --bridge-color: #ff9900;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 50px;
+        }
+
+        /* --- NEW HIGHLIGHT CLASSES --- */
+        .h-yellow { color: #ffe600; font-weight: bold; }
+        .h-cyan { color: #00f2ff; font-weight: bold; }
+        .h-pink { color: #ff00aa; font-weight: bold; }
+        .h-under { text-decoration: underline; text-decoration-color: rgba(255,255,255,0.5); text-underline-offset: 3px; }
+        .h-box { background: rgba(255,255,255,0.1); padding: 0 4px; border-radius: 3px; }
+
+        /* Header */
+        header {
+            background: linear-gradient(90deg, #000 0%, #1a1a1a 100%);
+            padding: 2rem;
+            border-bottom: 1px solid var(--border);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: linear-gradient(to right, #fff, var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle { color: var(--text-muted); font-size: 0.9rem; }
+
+        /* Navigation Tabs */
+        .nav-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 20px;
+            flex-wrap: wrap;
+            background: rgba(255,255,255,0.02);
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 12px 24px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .nav-btn:hover { border-color: var(--accent); color: var(--text-main); }
+        .nav-btn.active {
+            background: var(--accent);
+            color: #000;
+            border-color: var(--accent);
+            box-shadow: 0 0 15px var(--accent-dim);
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .intro-section {
+            background: var(--bg-card);
+            padding: 30px;
+            border-left: 4px solid var(--accent);
+            margin-bottom: 30px;
+        }
+
+        .intro-title { font-size: 1.5rem; margin-bottom: 10px; color: var(--accent); }
+        .intro-text { color: var(--text-muted); font-size: 1.1rem; }
+
+        /* Diagram Container */
+        .diagram-container {
+            background: rgba(0,0,0,0.3);
+            border: 1px dashed var(--border);
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .diagram-label {
+            color: var(--accent);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        /* Comparison Box */
+        .comparison-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 4px;
+        }
+        .comp-title { color: var(--vs-color); font-weight: bold; text-transform: uppercase; font-size: 0.9rem; margin-bottom: 10px; }
+        .comp-text { color: #ddd; font-size: 1rem; margin-bottom: 15px; }
+
+        .comp-examples {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .comp-example-card {
+            background: rgba(0,0,0,0.3);
+            padding: 15px;
+            border-left: 2px solid var(--vs-color);
+        }
+
+        .comp-ex-label { font-size: 0.75rem; color: var(--vs-color); text-transform: uppercase; margin-bottom: 5px; }
+        .comp-ex-text { font-style: italic; color: #ccc; font-size: 0.9rem; }
+
+        /* Power Move Box */
+        .power-box {
+            background: rgba(0, 204, 255, 0.05);
+            border: 1px solid var(--power-color);
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 4px;
+        }
+        .power-title { color: var(--power-color); font-weight: bold; text-transform: uppercase; font-size: 0.9rem; margin-bottom: 10px; }
+        .power-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .power-col h4 { color: #fff; font-size: 0.9rem; margin-bottom: 8px; text-transform: uppercase; }
+        .power-col p { color: #aaa; font-size: 0.95rem; }
+        .power-bad { color: var(--error); }
+        .power-good { color: var(--accent); }
+
+        /* Bridge Expression Box */
+        .bridge-section {
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
+        .bridge-title {
+            color: var(--bridge-color);
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--bridge-color);
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+        .bridge-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .bridge-card {
+            background: rgba(255, 153, 0, 0.05);
+            border: 1px solid var(--bridge-color);
+            padding: 15px;
+            border-radius: 4px;
+        }
+        .bridge-example { color: #fff; font-size: 1rem; margin-bottom: 8px; font-style: italic; }
+        .bridge-context { color: var(--text-muted); font-size: 0.85rem; }
+        .bridge-highlight { color: var(--bridge-color); font-weight: bold; }
+
+        /* Distinction Matrix */
+        .distinction-section { margin-top: 30px; }
+        .distinction-title { color: #fff; font-size: 1rem; text-transform: uppercase; margin-bottom: 15px; border-bottom: 1px solid #444; display: inline-block; }
+        .distinction-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+        .dist-card { padding: 15px; border-radius: 4px; border: 1px solid #333; }
+        .dist-card.critical { background: rgba(255, 77, 77, 0.1); border-color: var(--error); }
+        .dist-card.severe { background: rgba(255, 0, 255, 0.1); border-color: #ff00ff; }
+        .dist-card.material { background: rgba(0, 255, 157, 0.1); border-color: var(--accent); }
+        .dist-head { font-weight: bold; text-transform: uppercase; font-size: 0.9rem; margin-bottom: 5px; }
+        .dist-card.critical .dist-head { color: var(--error); }
+        .dist-card.severe .dist-head { color: #ff00ff; }
+        .dist-card.material .dist-head { color: var(--accent); }
+        .dist-def { font-size: 0.85rem; color: #ddd; margin-bottom: 8px; }
+        .dist-ex { font-size: 0.8rem; color: #aaa; font-style: italic; }
+
+        /* Scenarios */
+        .scenarios-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            transition: transform 0.2s;
+        }
+
+        .card:hover { transform: translateY(-5px); border-color: var(--accent); }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .scenario-text {
+            font-size: 1.1rem;
+            color: var(--text-main);
+            margin-bottom: 15px;
+            font-weight: 500;
+            border-left: 3px solid var(--accent);
+            padding-left: 15px;
+        }
+
+        .context-text {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        /* Brazil Box */
+        .brazil-box {
+            background: rgba(255, 204, 0, 0.05);
+            border: 1px solid var(--brazil-yellow);
+            border-radius: 6px;
+            padding: 15px;
+        }
+
+        .brazil-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .flag-icon { font-size: 1.5rem; }
+
+        .brazil-equiv-label {
+            display: block;
+            font-size: 0.7rem;
+            color: var(--brazil-yellow);
+            text-transform: uppercase;
+        }
+
+        .brazil-equiv-text {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .brazil-explanation {
+            font-size: 0.9rem;
+            color: #ddd;
+            line-height: 1.4;
+        }
+
+        /* Exercise Section */
+        .exercise-section {
+            background: linear-gradient(45deg, #1a1a1a, #222);
+            padding: 30px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .prompt { font-size: 1.2rem; margin-bottom: 20px; color: var(--accent); }
+
+        .input-area {
+            width: 100%;
+            max-width: 500px;
+            padding: 15px;
+            background: #000;
+            border: 1px solid var(--border);
+            color: #fff;
+            border-radius: 4px;
+            font-size: 1rem;
+            margin-bottom: 15px;
+        }
+
+        .input-area:focus { outline: none; border-color: var(--accent); }
+
+        .check-btn {
+            background: var(--accent);
+            color: #000;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        .check-btn:hover { background: #00cc7d; }
+
+        .feedback { margin-top: 15px; font-weight: bold; min-height: 24px; }
+        .feedback.success { color: var(--accent); }
+        .feedback.error { color: var(--error); }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Lego Disruptive <span style="color:var(--accent)">Block Chain</span></h1>
+        <div class="subtitle">Executive English for Brazilian Leaders</div>
+    </header>
+
+    <div class="nav-container">
+        <button class="nav-btn active" onclick="switchTab('diplomatic-pushback')">Diplomatic Pushback</button>
+        <button class="nav-btn" onclick="switchTab('interruption-timing')">Meeting Timing</button>
+        <button class="nav-btn" onclick="switchTab('material-concerns')">Material Concerns</button>
+        <button class="nav-btn" onclick="switchTab('if-i-may')">If I May (Deep Dive)</button>
+    </div>
+
+    <div class="container" id="content-area">
+        <!-- Content injected via JS -->
+    </div>
+
+    <script>
+        // 1. Initialize Mermaid manually to prevent auto-load errors
+        mermaid.initialize({ startOnLoad: false });
+
+        const lessonData = {
+            "diplomatic-pushback": {
+                title: "The Diplomatic Pushback",
+                why: "Brazilians often struggle to correct a boss or client without sounding rude ('You are wrong') or too passive. This structure allows you to <span class='h-cyan'>disagree firmly</span> but politely.",
+                diagramCode: `
+                graph LR
+                  A[Softener] --> B[Fact]
+                  B --> C[Correction]
+                  style A fill:#181b21,stroke:#00ff9d,color:#ccffcc
+                  style B fill:#181b21,stroke:#00ff9d,color:#cceeff
+                  style C fill:#181b21,stroke:#00ff9d,color:#ffccdd
+                `,
+                powerMove: {
+                    title: "The 'Suggests' Nuance",
+                    bad: "\"The data suggests...\" = \"Os dados sugerem...\" (Thinking it means a suggestion/idea)",
+                    good: "\"The data suggests...\" = \"Os dados <span class='h-yellow'>MOSTRAM / INDICAM</span>...\" (It is a soft way to state a fact)"
+                },
+                scenarios: [
+                    {
+                        company: "Scenario 1: Correcting the Boss",
+                        role: "Manager",
+                        name: "Lucas",
+                        text: "\"<span class='h-yellow'>If I may</span>, the data <span class='h-cyan'>suggests</span> a different trend in Q3.\"",
+                        context: "<strong>Softener:</strong> 'If I may'. <strong>Fact:</strong> 'Data suggests'. You are not saying HE is wrong, but the DATA is different."
+                    },
+                    {
+                        company: "Scenario 2: Disagreeing with Client",
+                        role: "Director",
+                        name: "Mariana",
+                        text: "\"<span class='h-yellow'>Don't get me wrong</span>, I see your point, but the compliance risk is too high.\"",
+                        context: "<strong>Softener:</strong> 'Don't get me wrong'. This prevents the client from feeling attacked."
+                    },
+                    {
+                        company: "Scenario 3: The 'Suggests' Trap",
+                        role: "Analyst",
+                        name: "Pedro",
+                        text: "\"The report <span class='h-cyan'>suggests</span> that we are over budget.\"",
+                        context: "<strong>Meaning:</strong> The report SHOWS we are over budget. It is not a 'suggestion' to be over budget."
+                    }
+                ],
+                brazilEquiv: "SE ME PERMITE / NÃO ME LEVE A MAL",
+                brazilTip: "Em inglês, 'suggests' quando usado com dados (data, report, graph) significa <strong>MOSTRAR</strong> ou <strong>INDICAR</strong>. Não é uma 'sugestão' opcional.",
+                exercise: {
+                    prompt: "Translate: 'Se me permite, os números mostram um erro.' (Use: If I may / suggests)",
+                    keywords: ["if i may", "suggests", "numbers", "data", "error"],
+                    successMsg: "Perfect. You used the softener and the correct verb.",
+                    failMsg: "Try starting with 'If I may' and use 'suggests' for 'mostram'."
+                }
+            },
+            "interruption-timing": {
+                title: "Timing Your Interruption",
+                why: "Knowing <em>how</em> to stop a meeting is as important as what you say. Are you stopping the train (<span class='h-pink'>Just a quick word</span>) or adding cargo to it (<span class='h-yellow'>If I may</span>)?",
+                diagramCode: `
+                graph TD
+                  A{Is person speaking?}
+                  A -- Yes --> B[Wait for pause]
+                  B --> C{Goal?}
+                  C -- Stop/Change Topic --> D[Excuse me, just a quick word]
+                  C -- Add Info --> E[If I may add...]
+                  style D fill:#181b21,stroke:#ff0055,color:#fff
+                  style E fill:#181b21,stroke:#00ff9d,color:#fff
+                `,
+                comparison: {
+                    title: "VS: Interrupting vs. Contributing",
+                    text: "Use <strong>'Just a quick word'</strong> when you need to <span class='h-pink'>STOP</span> the flow (e.g., time is up, urgent issue). Use <strong>'If I may'</strong> when you want to <span class='h-yellow'>FLOW WITH</span> the conversation.",
+                    examples: [
+                        { label: "Just a quick word", text: "\"Excuse me, just a quick word on the timeline before we move on.\"" },
+                        { label: "If I may", text: "\"If I may add to what Silvia said, the cost is also a factor.\"" }
+                    ]
+                },
+                scenarios: [
+                    {
+                        company: "Scenario 1: The Hard Stop",
+                        role: "Project Manager",
+                        name: "Roberto",
+                        text: "\"Excuse me, <span class='h-pink'>just a quick word</span>! We only have 5 minutes left.\"",
+                        context: "Roberto needs to hijack the meeting to manage time."
+                    },
+                    {
+                        company: "Scenario 2: The Soft Add",
+                        role: "Engineer",
+                        name: "Carla",
+                        text: "\"<span class='h-yellow'>If I may</span>, there is one technical detail we missed.\"",
+                        context: "Carla is adding value to the current topic, not changing it."
+                    }
+                ],
+                brazilEquiv: "SÓ UMA PALAVRINHA (Rápida) vs. SE ME PERMITE (Adição)",
+                brazilTip: "Não use 'Just a quick word' para dar uma opinião longa. É literalmente para algo rápido ou urgente.",
+                exercise: {
+                    prompt: "Translate: 'Com licença, só uma palavrinha sobre o prazo.'",
+                    keywords: ["excuse me", "quick word", "deadline", "timeline"],
+                    successMsg: "Spot on. You stopped the room politely.",
+                    failMsg: "Use 'Excuse me, just a quick word'..."
+                }
+            },
+            "material-concerns": {
+                title: "Material Concerns",
+                why: "In Business English, <span class='h-cyan'>'Material'</span> does not mean 'Physical'. It means <strong>Significant, Relevant, or Substantial</strong>. Brazilians often confuse this with 'Serious' or 'Grave'.",
+                diagramCode: `
+                graph LR
+                  A[Issue Detected] --> B{Is it Material?}
+                  B -- No --> C[Minor/Trivial]
+                  B -- Yes --> D[Impacts Value/Contract]
+                  style D fill:#181b21,stroke:#00ff9d,color:#fff
+                `,
+                distinctionMatrix: [
+                    { type: "critical", title: "CRITICAL", def: "Urgent, Time-Sensitive", ex: "Server is down now." },
+                    { type: "severe", title: "SEVERE", def: "High Intensity/Damage", ex: "Data leak of 1M users." },
+                    { type: "material", title: "MATERIAL", def: "Contractually Relevant", ex: "Change in supplier affects price." }
+                ],
+                scenarios: [
+                    {
+                        company: "Scenario 1: M&A Due Diligence",
+                        role: "Legal Counsel",
+                        name: "Ana",
+                        text: "\"The lack of IP ownership is a <span class='h-cyan'>material concern</span> for this deal.\"",
+                        context: "It's not just a 'problem'; it changes the value of the deal."
+                    },
+                    {
+                        company: "Scenario 2: Supply Chain",
+                        role: "Operations",
+                        name: "Carlos",
+                        text: "\"This delay will have a <span class='h-cyan'>material impact</span> on our Q3 revenue.\"",
+                        context: "It will significantly change the numbers."
+                    },
+                    {
+                        company: "Scenario 3: Contract Breach",
+                        role: "Vendor Manager",
+                        name: "Julia",
+                        text: "\"Failure to deliver by Friday constitutes a <span class='h-cyan'>material breach</span> of contract.\"",
+                        context: "A breach big enough to potentially cancel the contract."
+                    }
+                ],
+                brazilEquiv: "RELEVANTE / SUBSTANCIAL / SIGNIFICATIVO",
+                brazilTip: "Pare de usar 'Serious' para tudo. Se afeta o dinheiro ou o contrato, é <strong>MATERIAL</strong>.",
+                exercise: {
+                    prompt: "Translate: 'Isso tem um impacto relevante no contrato.'",
+                    keywords: ["material", "impact", "contract"],
+                    successMsg: "Excellent. You sound like a lawyer (in a good way).",
+                    failMsg: "Use 'material impact'."
+                }
+            },
+            "if-i-may": {
+                title: "If I May (Deep Dive)",
+                why: "This is the Swiss Army Knife of polite business English. It is not asking for permission; it is <span class='h-yellow'>announcing your intention</span> to speak with grace.",
+                diagramCode: `
+                graph TD
+                  A((IF I MAY))
+                  A --> B[To Add Info]
+                  A --> C[To Disagree]
+                  A --> D[To Take Action]
+                  B --> E[If I may add...]
+                  C --> F[If I may differ...]
+                  D --> G[If I may... Takes pen]
+                  style A fill:#00ff9d,color:#000
+                `,
+                bridgeExamples: [
+                    {
+                        text: "\"Excuse me, <span class='bridge-highlight'>if I may</span>, I would like to mention the loss.\"",
+                        context: "<strong>The Bridge:</strong> Connecting an apology ('Excuse me') to a difficult topic."
+                    },
+                    {
+                        text: "\"This data, <span class='bridge-highlight'>if I may say so</span>, is slightly misleading.\"",
+                        context: "<strong>The Softener:</strong> Inserting it in the middle to soften the criticism of the data."
+                    },
+                    {
+                        text: "\"Now, <span class='bridge-highlight'>if I may</span>, let's turn our attention to the future strategy.\"",
+                        context: "<strong>The Pivot:</strong> Using it to signal a change in topic or direction."
+                    }
+                ],
+                scenarios: [
+                    {
+                        company: "Scenario 1: The Soft Entry",
+                        role: "Usage",
+                        name: "Joining a Conversation",
+                        text: "\"<span class='h-yellow'>If I may</span> jump in here, I have some data that supports your point.\"",
+                        context: "<strong>Meaning:</strong> 'Com licença, posso entrar na conversa?'"
+                    },
+                    {
+                        company: "Scenario 2: The Polite Disagreement",
+                        role: "Usage",
+                        name: "Playing Devil's Advocate",
+                        text: "\"<span class='h-yellow'>If I may</span> play devil's advocate for a moment, what happens if the market crashes?\"",
+                        context: "<strong>Meaning:</strong> 'Se me permite fazer o contraponto...'"
+                    },
+                    {
+                        company: "Scenario 3: The Physical Action",
+                        role: "Usage",
+                        name: "Taking Control",
+                        text: "\"(Reaches for the whiteboard marker) <span class='h-yellow'>If I may</span>... let me draw the process for you.\"",
+                        context: "<strong>Meaning:</strong> 'Com licença / Deixa eu assumir'."
+                    }
+                ],
+                brazilEquiv: "COM LICENÇA / PERMITA-ME",
+                brazilTip: "Nunca traduza como 'Se eu puder'. Use <span class='h-yellow'>'If I may'</span> sempre que você sentir que está invadindo o espaço ou o tempo de alguém.",
+                exercise: {
+                    prompt: "Translate: 'Se me permite (entrar na conversa), eu tenho uma sugestão.'",
+                    keywords: ["if i may", "suggestion", "jump in"],
+                    successMsg: "Elegant and professional.",
+                    failMsg: "Start with 'If I may' or 'If I may jump in'."
+                }
+            }
+        };
+
+        // --- LOGIC ---
+        let currentKey = 'diplomatic-pushback';
+
+        async function renderContent(key) {
+            currentKey = key;
+            const data = lessonData[key];
+            const container = document.getElementById('content-area');
+
+            // Optional Comparison Box
+            let comparisonHTML = '';
+            if (data.comparison) {
+                let examplesHTML = '';
+                if (data.comparison.examples) {
+                    examplesHTML = `<div class="comp-examples">
+                        ${data.comparison.examples.map(ex => `
+                            <div class="comp-example-card">
+                                <div class="comp-ex-label">${ex.label}</div>
+                                <div class="comp-ex-text">${ex.text}</div>
+                            </div>
+                        `).join('')}
+                    </div>`;
+                }
+
+                comparisonHTML = `
+                    <div class="comparison-box">
+                        <div class="comp-title">${data.comparison.title}</div>
+                        <div class="comp-text">${data.comparison.text}</div>
+                        ${examplesHTML}
+                    </div>
+                `;
+            }
+
+            // Optional Power Move Box
+            let powerHTML = '';
+            if (data.powerMove) {
+                powerHTML = `
+                    <div class="power-box">
+                        <div class="power-title">${data.powerMove.title}</div>
+                        <div class="power-grid">
+                            <div class="power-col">
+                                <h4 class="power-bad">Avoid / Weak</h4>
+                                <p>${data.powerMove.bad}</p>
+                            </div>
+                            <div class="power-col">
+                                <h4 class="power-good">Use / Strong</h4>
+                                <p>${data.powerMove.good}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // NEW: Distinction Matrix (For Material vs Critical)
+            let distinctionHTML = '';
+            if (data.distinctionMatrix) {
+                distinctionHTML = `
+                    <div class="distinction-section">
+                        <div class="distinction-title">The Distinction Matrix</div>
+                        <div class="distinction-grid">
+                            ${data.distinctionMatrix.map(d => `
+                                <div class="dist-card ${d.type}">
+                                    <div class="dist-head">${d.title}</div>
+                                    <div class="dist-def">${d.def}</div>
+                                    <div class="dist-ex">Ex: ${d.ex}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // NEW: Bridge Expression Section
+            let bridgeHTML = '';
+            if (data.bridgeExamples) {
+                bridgeHTML = `
+                    <div class="bridge-section">
+                        <div class="bridge-title">As a Bridge Expression</div>
+                        <div class="bridge-grid">
+                            ${data.bridgeExamples.map(b => `
+                                <div class="bridge-card">
+                                    <div class="bridge-example">${b.text}</div>
+                                    <div class="bridge-context">${b.context}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Generate Scenarios HTML
+            let scenariosHTML = data.scenarios.map(s => `
+                <div class="card">
+                    <div class="card-header">
+                        <span>${s.company}</span>
+                        <span>${s.role}: ${s.name}</span>
+                    </div>
+                    <div class="scenario-text">${s.text}</div>
+                    <div class="context-text">${s.context}</div>
+
+                    <div class="brazil-box">
+                        <div class="brazil-header">
+                            <div class="flag-icon">🇧🇷</div>
+                            <div>
+                                <span class="brazil-equiv-label">Real Equivalent</span>
+                                <span class="brazil-equiv-text">${data.brazilEquiv}</span>
+                            </div>
+                        </div>
+                        <div class="brazil-explanation">${data.brazilTip}</div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Full HTML Injection
+            container.innerHTML = `
+                <div class="intro-section">
+                    <h2 class="intro-title">${data.title}</h2>
+                    <p class="intro-text">${data.why}</p>
+
+                    <!-- Diagram Container -->
+                    ${data.diagramCode ? `
+                    <div class="diagram-container">
+                        <span class="diagram-label">Visual Logic</span>
+                        <div class="mermaid">
+                            ${data.diagramCode}
+                        </div>
+                    </div>
+                    ` : ''}
+
+                    ${comparisonHTML}
+                    ${powerHTML}
+                    ${distinctionHTML}
+                    ${bridgeHTML}
+                </div>
+
+                <div class="scenarios-grid">
+                    ${scenariosHTML}
+                </div>
+
+                <div class="exercise-section">
+                    <p class="prompt">${data.exercise.prompt}</p>
+                    <input type="text" id="user-input" class="input-area" placeholder="Type your translation here..." onkeypress="handleEnter(event)">
+                    <br>
+                    <button class="check-btn" onclick="checkAnswer()">Check Answer</button>
+                    <div id="feedback-msg" class="feedback"></div>
+                </div>
+            `;
+
+            // Re-run Mermaid to render the new diagram
+            if (data.diagramCode) {
+                // Clear previous diagram attributes to force re-render
+                const mermaidDiv = document.querySelector('.mermaid');
+                if (mermaidDiv) {
+                    mermaidDiv.removeAttribute('data-processed');
+                    try {
+                        await mermaid.run({
+                            nodes: [mermaidDiv]
+                        });
+                    } catch (e) {
+                        console.log("Mermaid error:", e);
+                    }
+                }
+            }
+        }
+
+        function switchTab(key) {
+            // Update Buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Render Content
+            renderContent(key);
+        }
+
+        function checkAnswer() {
+            const input = document.getElementById('user-input').value.toLowerCase();
+            const feedback = document.getElementById('feedback-msg');
+            const data = lessonData[currentKey].exercise;
+
+            // Check if all keywords are present (simple validation)
+            const hitCount = data.keywords.filter(word => input.includes(word.toLowerCase())).length;
+
+            // Logic: If they hit the main phrase or most keywords
+            if (hitCount >= 2 || input.includes(data.keywords[0])) {
+                feedback.textContent = data.successMsg;
+                feedback.className = "feedback success";
+            } else {
+                feedback.textContent = data.failMsg;
+                feedback.className = "feedback error";
+            }
+        }
+
+        function handleEnter(e) {
+            if (e.key === 'Enter') checkAnswer();
+        }
+
+        // Initial Render
+        renderContent('diplomatic-pushback');
+
+    </script>
+</body>
+</html>
